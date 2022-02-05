@@ -174,3 +174,84 @@ public @interface Configuration {
 - @Service : 사실 @Service 는 특별한 처리를 하지 않는다. 대신 개발자들이 핵심 비즈니스 로직이 여기에 있겠구나 라고 비즈니스 계층을 인식하는데 도움이 된다.
 
 > 참고: useDefaultFilters 옵션은 기본으로 켜져있는데, 이 옵션을 끄면 기본 스캔 대상들이 제외된다. 그냥 이런 옵션이 있구나 정도 알고 넘어가자.
+
+## 필터
+- includeFilters : 컴포넌트 스캔 대상을 추가로 지정한다. 
+- excludeFilters : 컴포넌트 스캔에서 제외할 대상을 지정한다.
+
+**컴포넌트 스캔 대상에 추가할 애노테이션**
+```java
+@Target(ElementType.TYPE) // class level
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface MyIncludeComponent {
+}
+```
+
+**컴포넌트 스캔 대상에서 제외할 애노테이션**
+```java
+@Target(ElementType.TYPE) // class level
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface MyExIncludeComponent {
+}
+```
+
+**컴포넌트 스캔 대상에 추가할 클래스**
+```java
+@MyIncludeComponent
+public class BeanA {
+}
+```
+
+**컴포넌트 스캔 대상에서 제외할 클래스**
+```java
+@MyExIncludeComponent
+public class BeanB {
+}
+```
+
+**설정 정보와 전체 테스트 코드**
+```java
+public class ComponentFilterAppConfigTest {
+
+    @Test
+    void filterScan() {
+        ApplicationContext ac = new AnnotationConfigApplicationContext(ComponentFilterAppConfig.class);
+        final BeanA beanA = ac.getBean("beanA", BeanA.class);
+        assertThat(beanA).isNotNull();
+        assertThrows(
+                NoSuchBeanDefinitionException.class,
+                () -> ac.getBean("beanB", BeanB.class)
+        );
+    }
+
+    @Configuration
+    @ComponentScan(
+            includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = MyIncludeComponent.class),
+            excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = MyExIncludeComponent.class)
+    )
+    static class ComponentFilterAppConfig {
+    }
+
+}
+```
+- includeFilters 에 MyIncludeComponent 애노테이션을 추가해서 BeanA가 스프링 빈에 등록된다.
+- excludeFilters 에 MyExcludeComponent 애노테이션을 추가해서 BeanB는 스프링 빈에 등록되지 않는다.
+
+###FilterType 옵션
+FilterType은 5가지 옵션이 있다.  
+
+- ANNOTATION: 기본값, 애노테이션을 인식해서 동작한다. 
+  - ex) org.example.SomeAnnotation
+- ASSIGNABLE_TYPE: 지정한 타입과 자식 타입을 인식해서 동작한다. 
+  - ex) org.example.SomeClass
+- ASPECTJ: AspectJ 패턴 사용
+  - ex) org.example..*Service+
+- REGEX: 정규 표현식
+  - ex) org\.example\.Default.*
+- CUSTOM: TypeFilter 이라는 인터페이스를 구현해서 처리 
+  - ex) org.example.MyTypeFilter
+
+>  참고: @Component 면 충분하기 때문에, includeFilters 를 사용할 일은 거의 없다. excludeFilters 는 여러가지 이유로 간혹 사용할 때가 있지만 많지는 않다.
+>  특히 최근 스프링 부트는 컴포넌트 스캔을 기본으로 제공하는데, 개인적으로는 옵션을 변경하면서 사용하기 보다는 스프링의 기본 설정에 최대한 맞추어 사용하는 것을 권장하고, 선호하는 편이다.
