@@ -64,4 +64,76 @@ public class SingletonService {
 - 스프링 컨테이너 덕분에 고객의 요청이 올 때 마다 객체를 생성하는 것이 아니라, 이미 만들어진 객체를 공유해서 효율적으로 재사용할 수 있다.  
 
 >  참고: 스프링의 기본 빈 등록 방식은 싱글톤이지만, 싱글톤 방식만 지원하는 것은 아니다. 요청할 때 마다 새로운 객체를 생성해서 반환하는 기능도 제공한다. 
-> 자세한 내용은 뒤에 빈 스코프에서 설명하겠다.
+> 자세한 내용은 뒤에 빈 스코프에서 설명하겠다.  
+
+# 싱글톤 방식의 주의점  
+- 싱글톤 패턴이든, 스프링 같은 싱글톤 컨테이너를 사용하든, 객체 인스턴스를 하나만 생성해서 공유하는 싱글톤 방식은 여러 클라이언트가 하나의 같은 객체 인스턴스를 공유하기 때문에 싱글톤 객체는 상태를 유지(stateful)하게 설계하면 안된다.
+- 무상태(stateless)로 설계해야 한다!
+  - 특정 클라이언트에 의존적인 필드가 있으면 안된다.
+  - 특정 클라이언트가 값을 변경할 수 있는 필드가 있으면 안된다!
+  - 가급적 읽기만 가능해야 한다.
+  - 필드 대신에 자바에서 공유되지 않는, 지역변수, 파라미터, ThreadLocal 등을 사용해야 한다.
+- 스프링 빈의 필드에 공유 값을 설정하면 정말 큰 장애가 발생할 수 있다!  
+
+**상태를 유지할 경우 발생하는 문제점 예시**  
+
+```java
+package hello.core.singleton;
+
+public class StatefulService {
+
+    private int price; //상태를 유지하는 필드
+
+    public void order(String name, int price) {
+        System.out.println("name = " + name + " price = " + price);
+        this.price = price; //여기가 문제!
+    }
+
+    public int getPrice() {
+        return price;
+    }
+}
+```
+
+```java
+package hello.core.singleton;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class StatefulServiceTest {
+
+    @Test
+    void statefulServiceSingleton() {
+        ApplicationContext ac = new AnnotationConfigApplicationContext(TestConfig.class);
+        StatefulService statefulService1 = ac.getBean("statefulService", StatefulService.class);
+
+        StatefulService statefulService2 = ac.getBean("statefulService", StatefulService.class);
+
+        //ThreadA: A 사용자 10000원 주문
+        statefulService1.order("userA", 10000);
+        //ThreadB: B 사용자 20000원 주문
+        statefulService2.order("userB", 20000);
+        //ThreadA: 사용자 A 주문 금액 조회
+        int price = statefulService1.getPrice();
+        //ThreadA: 사용자 A는 10000원을 기대했지만, 기대와 다르게 20000원 출력
+        System.out.println("price = " + price);
+        assertThat(statefulService1.getPrice()).isEqualTo(20000);
+    }
+
+    static class TestConfig {
+        @Bean
+        public StatefulService statefulService() {
+            return new StatefulService();
+        }
+    }
+}
+```
+- ThreadA가 사용자 A 코드를 호출하고 ThreadB가 사용자 B 코드를 호출한다 가정하자.
+- StatefulService 의 price 필드는 공유되는 필드인데, 특정 클라이언트가 값을 변경한다.
+- 사용자 A의 주문금액은 10000원이 되어야 하는데, 20000원이라는 결과가 나왔다.
+- 공유필드는 조심해야 한다! 스프링 빈은 항상 무상태(stateless)로 설계하자.  
