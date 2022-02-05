@@ -239,7 +239,7 @@ public class ComponentFilterAppConfigTest {
 - includeFilters 에 MyIncludeComponent 애노테이션을 추가해서 BeanA가 스프링 빈에 등록된다.
 - excludeFilters 에 MyExcludeComponent 애노테이션을 추가해서 BeanB는 스프링 빈에 등록되지 않는다.
 
-###FilterType 옵션
+### FilterType 옵션
 FilterType은 5가지 옵션이 있다.  
 
 - ANNOTATION: 기본값, 애노테이션을 인식해서 동작한다. 
