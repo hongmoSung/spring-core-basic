@@ -30,4 +30,13 @@ public class ConfigurationSingletonTest {
         assertThat(memberService.getMemberRepo()).isSameAs(memberRepository);
         assertThat(orderService.getMemberRepo()).isSameAs(memberRepository);
     }
+
+    @Test
+    void configurationDeep() {
+        //AppConfig 도 스프링 빈으로 등록된다.
+        ApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
+        AppConfig bean = ac.getBean(AppConfig.class);
+        System.out.println("bean = " + bean.getClass());
+        //출력: bean = class hello.core.AppConfig$$EnhancerBySpringCGLIB$$4d07cd43
+    }
 }
