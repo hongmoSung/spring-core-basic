@@ -1,5 +1,37 @@
-# 싱글톤 패턴
+# 싱글톤 컨테이너
 
+### 웹 애플리케이션과 싱글톤
+- 스프링은 태생이 기업용 온라인 서비스 기술을 지원하기 위해 탄생했다.
+- 대부분의 스프링 애플리케이션은 웹 애플리케이션이다. 물론 웹이 아닌 애플리케이션 개발도 얼마든지 개발할 수 있다.
+- 웹 애플리케이션은 보통 여러 고객이 동시에 요청을 한다.
+- <img src="../img/ch05/di-container.png">
+
+```java
+public class SingletonTest {
+
+    @Test
+    @DisplayName("스프링 없는 순수한 DI 컨테이너")
+    void pureContainer() {
+        final AppConfig appConfig = new AppConfig();
+        //1. 조회: 호출할 때 마다 객체를 생성
+        final MemberService memberService1 = appConfig.memberService();
+
+        //2. 조회: 호출할 때 마다 객체를 생성
+        final MemberService memberService2 = appConfig.memberService();
+
+        // 참조값이 다른 것을 확인
+        System.out.println("memberService1 = " + memberService1);
+        System.out.println("memberService2 = " + memberService2);
+
+        assertThat(memberService1).isNotSameAs(memberService2);
+    }
+}
+```
+- 우리가 만들었던 스프링 없는 순수한 DI 컨테이너인 AppConfig는 요청을 할 때 마다 객체를 새로 생성한다.
+- 고객 트래픽이 초당 100이 나오면 초당 100개 객체가 생성되고 소멸된다! -> 메모리 낭비가 심하다.
+- 해결방안은 해당 객체가 딱 1개만 생성되고, 공유하도록 설계하면 된다. -> 싱글톤 패턴
+
+### 싱글톤 패턴
 - 클래스의 인스턴스가 딱 1개만 생성되는 것을 보장하는 디자인 패턴이다.
 - 그래서 객체 인스턴스를 2개 이상 생성하지 못하도록 막아야 한다.  
   - private 생성자를 사용해서 외부에서 임의로 new 키워드를 사용하지 못하도록 막아야 한다.
