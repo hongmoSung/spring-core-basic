@@ -6,25 +6,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberServiceImpl implements MemberService {
 
-    private final MemberRepository memberRepo;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepo) {
-        this.memberRepo = memberRepo;
+    public MemberServiceImpl(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
     public void join(Member member) {
-        memberRepo.save(member);
+        memberRepository.save(member);
     }
 
     @Override
     public Member findMember(Long memberId) {
-        return memberRepo.findById(memberId);
+        return memberRepository.findById(memberId);
     }
 
     // 테스트용
-    public MemberRepository getMemberRepo() {
-        return memberRepo;
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
     }
 }

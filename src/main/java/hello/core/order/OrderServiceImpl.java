@@ -10,19 +10,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private final MemberRepository memberRepo;
+    private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
-        final Member member = memberRepo.findById(memberId);
+        final Member member = memberRepository.findById(memberId);
         final int discountPrice = discountPolicy.discount(member, itemPrice);
 
         return new Order(memberId, itemName, itemPrice, discountPrice);
     }
 
     // 테스트용
-    public MemberRepository getMemberRepo() {
-        return memberRepo;
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
     }
 }
