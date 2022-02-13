@@ -178,3 +178,81 @@ public class OrderServiceImpl implements OrderService {
 - 생성자 주입 방식을 선택하는 이유는 여러가지가 있지만, 프레임워크에 의존하지 않고, 순수한 자바 언어의 특징을 잘 살리는 방법이기도 하다.
 - 기본으로 생성자 주입을 사용하고, 필수 값이 아닌 경우에는 수정자 주입 방식을 옵션으로 부여하면 된다. 생성자 주입과 수정자 주입을 동시에 사용할 수 있다.
 - 항상 생성자 주입을 선택해라! 그리고 가끔 옵션이 필요하면 수정자 주입을 선택해라. 필드 주입은 사용하지 않는게 좋다.
+
+### 롬복과 최신 트랜드
+
+__AS-IS__
+```java
+@Component
+public class OrderServiceImpl implements OrderService {
+
+    private final MemberRepository memberRepo;
+    private final DiscountPolicy discountPolicy;
+
+    @Autowired
+    public OrderServiceImpl(MemberRepository memberRepo, DiscountPolicy discountPolicy) {
+        this.memberRepo = memberRepo;
+        this.discountPolicy = discountPolicy;
+    }
+}
+```
+
+__TO-BE__
+```java
+@Component
+@RequiredArgsConstructor
+public class OrderServiceImpl implements OrderService {
+
+    private final MemberRepository memberRepo;
+    private final DiscountPolicy discountPolicy;
+}
+
+```
+- 롬복 라이브러리가 제공하는 @RequiredArgsConstructor 기능을 사용하면 final이 붙은 필드를 모아서 생성자를 자동으로 만들어준다. (다음 코드에는 보이지 않지만 실제 호출 가능하다.)
+- 최종 결과는 다음과 같다! 정말 간결하지 않은가!
+
+롬복 라이브러리 적용 방법
+```build.gradle
+plugins {
+	id 'org.springframework.boot' version '2.6.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'hello'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+//lombok 설정 추가 시작
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+//lombok 설정 추가 끝
+
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+
+	//lombok 라이브러리 추가 시작
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	//lombok 라이브러리 추가 끝
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+```
+1. Preferences(윈도우 File Settings) plugin -> lombok 검색 설치 실행 (재시작)
+2. Preferences Annotation Processors 검색 -> Enable annotation processing 체크 (재시작)
+3. 임의의 테스트 클래스를 만들고 @Getter, @Setter 확인
