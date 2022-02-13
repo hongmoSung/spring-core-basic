@@ -7,7 +7,7 @@
 - [x] [섹션 4. 스프링 컨테이너와 스프링 빈](https://github.com/hongmoSung/spring-core-basic/blob/main/doc/spring-container-and-bean.md)  
 - [x] [섹션 5. 싱글톤 컨테이너](https://github.com/hongmoSung/spring-core-basic/blob/main/doc/singleton.md)  
 - [x] [섹션 6. 컴포넌트 스캔](https://github.com/hongmoSung/spring-core-basic/blob/main/doc/component-scan.md)  
-- [ ] 섹션 7. 의존관계 자동 주입  
+- [ ] [섹션 7. 의존관계 자동 주입](https://github.com/hongmoSung/spring-core-basic/blob/main/doc/dependency-injection.md)  
 - [ ] 섹션 8. 빈 생명주기 콜백  
 - [ ] 섹션 9. 빈 스코프  
 - [ ] 섹션 10. 다음으로  
