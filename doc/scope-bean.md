@@ -474,3 +474,56 @@ Error creating bean with name 'myLogger': Scope 'request' is not active for the 
 스프링 애플리케이션을 실행 시키면 오류가 발생한다. 메시지 마지막에 싱글톤이라는 단어가 나오고…  
 스프링 애플리케이션을 실행하는 시점에 싱글톤 빈은 생성해서 주입이 가능하지만, request 스코프 빈은  
 아직 생성되지 않는다. 이 빈은 실제 고객의 요청이 와야 생성할 수 있다!  
+
+### 스코프와 Provider
+
+첫번째 해결방안은 앞서 배운 Provider를 사용하는 것이다.  
+간단히 ObjectProvider를 사용해보자.  
+
+__LogDemoController__
+```java
+@Controller
+@RequiredArgsConstructor
+public class LogDemoController {
+
+    private final LogDemoService logDemoService;
+    private final ObjectProvider<MyLogger> myLoggerObjectProvider;
+
+    @RequestMapping("log-demo")
+    @ResponseBody
+    public String logDemo(HttpServletRequest request) {
+        MyLogger myLogger = this.myLoggerObjectProvider.getObject();
+        String requestUrl = request.getRequestURI().toString();
+        myLogger.setRequestURL(requestUrl);
+
+        myLogger.log("controller test");
+        logDemoService.logic("testId");
+        return "OK";
+    }
+}
+```
+
+__LogDemoService__
+```java
+@Service
+@RequiredArgsConstructor
+public class LogDemoService {
+
+    private final ObjectProvider<MyLogger> myLoggerObjectProvider;
+
+    public void logic(String testId) {
+        MyLogger myLogger = myLoggerObjectProvider.getObject();
+        myLogger.log("service id = " + testId);
+    }
+}
+```
+
+```shell
+[fceba521-3566-48cd-8550-48ab3dc31ddd] request scope bean create:hello.core.common.MyLogger@27c5a2fe
+[fceba521-3566-48cd-8550-48ab3dc31ddd][/log-demo] controller test
+[fceba521-3566-48cd-8550-48ab3dc31ddd][/log-demo] service id = testId
+[fceba521-3566-48cd-8550-48ab3dc31ddd] request scope bean close:hello.core.common.MyLogger@
+```
+- `ObjectProvider` 덕분에 `ObjectProvider.getObject()` 를 호출하는 시점까지 request scope 빈의 생성을 지연할 수 있다.
+- `ObjectProvider.getObject()`를 호출하시는 시점에는 HTTP 요청이 진행중이므로 request scope 빈의 생성이 정상 처리된다.
+- `ObjectProvider.getObject()`를 `LogDemoController`, `LogDemoService` 에서 각각 한번씩 따로 호출해도 같은 HTTP 요청이면 같은 스프링 빈이 반환된다! 내가 직접 이걸 구분하려면 얼마나 힘들까
