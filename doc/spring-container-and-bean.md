@@ -6,15 +6,15 @@
 //스프링 컨테이너 생성
 ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
 ```
-- ```ApplicationContext``` 를 스프링 컨테이너라 한다.
-- ```ApplicationContext``` 는 인터페이스이다.
+- `ApplicationContext` 를 스프링 컨테이너라 한다.
+- `ApplicationContext` 는 인터페이스이다.
 - 스프링 컨테이너는 **XML을 기반**으로 만들 수 있고, **애노테이션 기반**의 자바 설정 클래스로 만들 수 있다. 
-- 직전에 ```AppConfig``` 를 사용했던 방식이 애노테이션 기반의 자바 설정 클래스로 스프링 컨테이너를 만든 것이다.
-- 자바 설정 클래스를 기반으로 스프링 컨테이너( ```ApplicationContext``` )를 만들어보자.
-  - ```new AnnotationConfigApplicationContext(AppConfig.class);``` 
+- 직전에 `AppConfig` 를 사용했던 방식이 애노테이션 기반의 자바 설정 클래스로 스프링 컨테이너를 만든 것이다.
+- 자바 설정 클래스를 기반으로 스프링 컨테이너( `ApplicationContext` )를 만들어보자.
+  - `new AnnotationConfigApplicationContext(AppConfig.class);` 
   - 이 클래스는 ```ApplicationContext``` 인터페이스의 구현체이다.
 
-> 참고: 더 정확히는 스프링 컨테이너를 부를 때 ```BeanFactory``` , ```ApplicationContext``` 로 구분해서 이야기한다. 이 부분은 뒤에서 설명하겠다. ```BeanFactory``` 를 직접 사용하는 경우는 거의 없으므로 일반적으로 ```ApplicationContext``` 를 스프링 컨테이너라 한다.
+> 참고: 더 정확히는 스프링 컨테이너를 부를 때 `BeanFactory` , `ApplicationContext` 로 구분해서 이야기한다. 이 부분은 뒤에서 설명하겠다. ```BeanFactory``` 를 직접 사용하는 경우는 거의 없으므로 일반적으로 `ApplicationContext` 를 스프링 컨테이너라 한다.
 
 ### 스프링 컨테이너의 생성 과정
 1. 스프링 컨테이너 생성  
@@ -74,8 +74,8 @@ ApplicatonContext 가 제공하는 부가기능
   - XML을 읽어서 BeanDefinition을 만들면 된다.
   - 자바 코드를 읽어서 BeanDefinition을 만들면 된다.
   - 스프링 컨테이너는 자바 코드인지, XML인지 몰라도 된다. 오직 BeanDefinition만 알면 된다.
-- ```BeanDefinition``` 을 빈 설정 메타정보라 한다.
-  - ```@Bean``` , ```<bean>``` 당 각각 하나씩 메타 정보가 생성된다.
+- `BeanDefinition` 을 빈 설정 메타정보라 한다.
+  - `@Bean` , `<bean>` 당 각각 하나씩 메타 정보가 생성된다.
 - 스프링 컨테이너는 이 메타정보를 기반으로 스프링 빈을 생성한다.  
   - <img src="../img/ch04/beanDefinition.png">  
   - <img src="../img/ch04/beanDefinition2.png">

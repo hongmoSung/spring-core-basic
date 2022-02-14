@@ -212,7 +212,7 @@ public class OrderServiceImpl implements OrderService {
 - 최종 결과는 다음과 같다! 정말 간결하지 않은가!
 
 롬복 라이브러리 적용 방법
-```build.gradle
+```groovy
 plugins {
 	id 'org.springframework.boot' version '2.6.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
