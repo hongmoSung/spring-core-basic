@@ -20,22 +20,22 @@ ApplicationContext applicationContext = new AnnotationConfigApplicationContext(A
 
 ### 스프링 컨테이너의 생성 과정
 1. 스프링 컨테이너 생성  
-<img src="../img/ch04/spring-container-1.png">
+- <img src="../img/ch04/spring-container-1.png">
 - new AnnotationConfigApplicationContext(AppConfig.class)
 - 스프링 컨테이너를 생성할 때는 구성 정보를 지정해주어야 한다. 
 - 여기서는 AppConfig.class 를 구성 정보로 지정했다.  
 
 3. 스프링 빈 등록  
-<img src="../img/ch04/spring-container-2.png">
+- <img src="../img/ch04/spring-container-2.png">
 - 스프링 컨테이너는 파라미터로 넘어온 설정 클래스 정보를 사용해서 스프링 빈을 등록한다.
 - **빈 이름**
 - 빈 이름은 메서드 이름을 사용한다. 빈 이름을 직접 부여할 수 도 있다.
 - `@Bean(name="memberService2")`
 > **주의: 빈 이름은 항상 다른 이름을 부여**해야 한다. 같은 이름을 부여하면, 다른 빈이 무시되거나, 기존 빈을 덮어버리거나 설정에 따라 오류가 발생한다.
 6. 스프링 빈 의존관계 설정 - 준비  
-<img src="../img/ch04/spring-container-3.png">
+- <img src="../img/ch04/spring-container-3.png">
 7. 스프링 빈 의존관계 설정 - 완료  
-<img src="../img/ch04/spring-container-4.png">
+- <img src="../img/ch04/spring-container-4.png">  
 - 스프링 컨테이너는 설정 정보를 참고해서 의존관계를 주입(DI)한다.
 - 단순히 자바 코드를 호출하는 것 같지만, 차이가 있다. 이 차이는 뒤에 싱글톤 컨테이너에서 설명한다.
 
