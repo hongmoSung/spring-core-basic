@@ -294,14 +294,13 @@ Caused by: org.springframework.beans.factory.NoUniqueBeanDefinitionException: No
 ### @Autowired 필드 명, @Qualifier, @Primary
 
 조회 대상 빈이 2개 이상일 때 해결 방법
-- @Autowired 필드 명 매칭
-- @Qualifier -> @Qualifier 끼리 매칭 -> 빈 이름 매칭
-- @Primary 사용
+- `@Autowired` 필드 명 매칭
+- `@Qualifier` -> `@Qualifier` 끼리 매칭 -> 빈 이름 매칭
+- `@Primary` 사용
 
 #### @Autowired 필드 명 매칭
 
-@Autowired 는 타입 매칭을 시도하고, 이때 여러 빈이 있으면 필드 이름, 파라미터 이름으로 빈 이름을 추가
-매칭한다.
+`@Autowired` 는 타입 매칭을 시도하고, 이때 여러 빈이 있으면 필드 이름, 파라미터 이름으로 빈 이름을 추가 매칭한다.
 
 필드 명을 빈 이름으로 변경
 ```java
@@ -319,9 +318,9 @@ private DiscountPolicy rateDiscountPolicy
 2. 타입 매칭의 결과가 2개 이상일 때 필드 명, 파라미터 명으로 빈 이름 매칭
 
 #### @Qualifier 사용
-```@Qualifier``` 는 추가 구분자를 붙여주는 방법이다. 주입시 추가적인 방법을 제공하는 것이지 빈 이름을 변경하는 것은 아니다.
+`@Qualifier` 는 추가 구분자를 붙여주는 방법이다. 주입시 추가적인 방법을 제공하는 것이지 빈 이름을 변경하는 것은 아니다.
 
-빈 등록시 @Qualifier를 붙여 준다.
+빈 등록시 `@Qualifier`를 붙여 준다.
 ```java
 @Component
 @Qualifier("mainDiscountPolicy")
@@ -332,7 +331,7 @@ public class RateDiscountPolicy implements DiscountPolicy {}
 public class FixDiscountPolicy implements DiscountPolicy {}
 ```
 
-주입시에 @Qualifier를 붙여주고 등록한 이름을 적어준다.
+주입시에 `@Qualifier`를 붙여주고 등록한 이름을 적어준다.
 
 생성자 자동 주입 예시
 ```java
@@ -351,7 +350,7 @@ public DiscountPolicy setDiscountPolicy(@Qualifier("mainDiscountPolicy") Discoun
     return discountPolicy;
 }
 ```
-@Qualifier 로 주입할 때 @Qualifier("mainDiscountPolicy") 를 못찾으면 어떻게 될까? 그러면 mainDiscountPolicy라는 이름의 스프링 빈을 추가로 찾는다. 하지만 경험상 @Qualifier 는 @Qualifier 를 찾는 용도로만 사용하는게 명확하고 좋다
+`@Qualifier` 로 주입할 때 `@Qualifier("mainDiscountPolicy")` 를 못찾으면 어떻게 될까? 그러면 mainDiscountPolicy 라는 이름의 스프링 빈을 추가로 찾는다. 하지만 경험상 @Qualifier 는 @Qualifier 를 찾는 용도로만 사용하는게 명확하고 좋다
 
 @Qualifier 정리
 1. @Qualifier끼리 매칭
