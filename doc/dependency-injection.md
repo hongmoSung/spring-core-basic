@@ -10,7 +10,7 @@
 ### 생성자 주입
 - 이름 그대로 생성자를 통해서 의존 관계를 주입 받는 방법이다. 
 - 지금까지 우리가 진행했던 방법이 바로 생성자 주입이다. 
-- 특징
+- __특징__
   - 생성자 호출시점에 딱 1번만 호출되는 것이 보장된다.
   - 불변, 필수 의존관계에 사용
 ```java
@@ -62,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
   - DI 프레임워크가 없으면 아무것도 할 수 없다.
   - 사용하지 말자!
     - 애플리케이션의 실제 코드와 관계 없는 테스트 코드
-    - 스프링 설정을 목적으로 하는 @Configuration 같은 곳에서만 특별한 용도로 사용
+    - 스프링 설정을 목적으로 하는 `@Configuration` 같은 곳에서만 특별한 용도로 사용
 ```java
 @Component
 public class OrderServiceImpl implements OrderService {
@@ -98,12 +98,12 @@ public class OrderServiceImpl implements OrderService {
 
 ### 옵션 처리
 주입할 스프링 빈이 없어도 동작해야 할 때가 있다.
-그런데 ```@Autowired``` 만 사용하면 required 옵션의 기본값이 true 로 되어 있어서 자동 주입 대상이 없으면 오류가 발생한다.
+그런데 `@Autowired` 만 사용하면 required 옵션의 기본값이 true 로 되어 있어서 자동 주입 대상이 없으면 오류가 발생한다.
 
 자동 주입 대상을 옵션으로 처리하는 방법은 다음과 같다.
-- ```@Autowired(required=false)``` : 자동 주입할 대상이 없으면 수정자 메서드 자체가 호출 안됨
-- ```org.springframework.lang.@Nullable``` : 자동 주입할 대상이 없으면 null이 입력된다.
-- ```Optional<>``` : 자동 주입할 대상이 없으면 Optional.empty 가 입력된다.
+- `@Autowired(required=false)` : 자동 주입할 대상이 없으면 수정자 메서드 자체가 호출 안됨
+- `org.springframework.lang.@Nullable` : 자동 주입할 대상이 없으면 null이 입력된다.
+- `Optional<>` : 자동 주입할 대상이 없으면 Optional.empty 가 입력된다.
 
 ```java
 public class AutoWiredTest {
@@ -153,7 +153,7 @@ __불변__
 - 누군가 실수로 변경할 수 도 있고, 변경하면 안되는 메서드를 열어두는 것은 좋은 설계 방법이 아니다.
 - 생성자 주입은 객체를 생성할 때 딱 1번만 호출되므로 이후에 호출되는 일이 없다. 따라서 불변하게 설계할 수 있다.
 
-__final 키워드__  
+__final__ 키워드  
 생성자 주입을 사용하면 필드에 final 키워드를 사용할 수 있다. 그래서 생성자에서 혹시라도 값이 설정되지 않는 오류를 컴파일 시점에 막아준다. 다음 코드를 보자.
 ```java
 @Component
@@ -169,7 +169,7 @@ public class OrderServiceImpl implements OrderService {
 }
 ```
 - 잘 보면 필수 필드인 discountPolicy 에 값을 설정해야 하는데, 이 부분이 누락되었다. 자바는 컴파일 시점에 다음 오류를 발생시킨다.
-- ```java: variable discountPolicy might not have been initialized```
+- `java: variable discountPolicy might not have been initialized`
 - 기억하자! 컴파일 오류는 세상에서 가장 빠르고, 좋은 오류다!
 > 참고: 수정자 주입을 포함한 나머지 주입 방식은 모두 생성자 이후에 호출되므로, 필드에 final 키워드를
 사용할 수 없다. 오직 생성자 주입 방식만 final 키워드를 사용할 수 있다.
@@ -208,7 +208,7 @@ public class OrderServiceImpl implements OrderService {
 }
 
 ```
-- 롬복 라이브러리가 제공하는 @RequiredArgsConstructor 기능을 사용하면 final이 붙은 필드를 모아서 생성자를 자동으로 만들어준다. (다음 코드에는 보이지 않지만 실제 호출 가능하다.)
+- 롬복 라이브러리가 제공하는 `@RequiredArgsConstructor` 기능을 사용하면 `final`이 붙은 필드를 모아서 생성자를 자동으로 만들어준다. (다음 코드에는 보이지 않지만 실제 호출 가능하다.)
 - 최종 결과는 다음과 같다! 정말 간결하지 않은가!
 
 롬복 라이브러리 적용 방법
@@ -259,7 +259,7 @@ tasks.named('test') {
 
 ### 조회 빈이 2개 이상 - 문제
 
-```@Autowired``` 는 타입(Type)으로 조회한다.
+`@Autowired` 는 타입(Type)으로 조회한다.
 ```java
 @Autowired
 private DiscountPolicy discountPolicy;
