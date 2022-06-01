@@ -20,18 +20,21 @@ ApplicationContext applicationContext = new AnnotationConfigApplicationContext(A
 
 ### 스프링 컨테이너의 생성 과정
 1. 스프링 컨테이너 생성  
-- <img src="../img/ch04/spring-container-1.png">
-- new AnnotationConfigApplicationContext(AppConfig.class)
+- <img src="../img/ch04/spring-container-1.png" alt="spring-container-1">
+- `new AnnotationConfigApplicationContext(AppConfig.class)`
 - 스프링 컨테이너를 생성할 때는 구성 정보를 지정해주어야 한다. 
 - 여기서는 AppConfig.class 를 구성 정보로 지정했다.  
 
 3. 스프링 빈 등록  
-- <img src="../img/ch04/spring-container-2.png">
+- <img src="../img/ch04/spring-container-2.png" alt="spring-container-2">
 - 스프링 컨테이너는 파라미터로 넘어온 설정 클래스 정보를 사용해서 스프링 빈을 등록한다.
 - **빈 이름**
 - 빈 이름은 메서드 이름을 사용한다. 빈 이름을 직접 부여할 수 도 있다.
 - `@Bean(name="memberService2")`
-> **주의: 빈 이름은 항상 다른 이름을 부여**해야 한다. 같은 이름을 부여하면, 다른 빈이 무시되거나, 기존 빈을 덮어버리거나 설정에 따라 오류가 발생한다.
+
+> **주의: 빈 이름은 항상 다른 이름을 부여**해야 한다.   
+> 같은 이름을 부여하면, 다른 빈이 무시되거나, 기존 빈을 덮어버리거나 설정에 따라 오류가 발생한다.
+
 6. 스프링 빈 의존관계 설정 - 준비  
 - <img src="../img/ch04/spring-container-3.png">
 7. 스프링 빈 의존관계 설정 - 완료  
@@ -54,7 +57,7 @@ ApplicationContext
 - 빈을 관리하고 검색하는 기능을 BeanFactory가 제공해주는데, 그러면 둘의 차이가 뭘까? 
 - 애플리케이션을 개발할 때는 빈은 관리하고 조회하는 기능은 물론이고, 수 많은 부가기능이 필요하다.  
 
-ApplicatonContext 가 제공하는 부가기능  
+`ApplicatonContext` 가 제공하는 부가기능  
 <img src="../img/ch04/applicatonContext.png">  
 - 메시지소스를 활용한 국제화 기능
   - 예를 들어서 한국에서 들어오면 한국어로, 영어권에서 들어오면 영어로 출력 
@@ -66,17 +69,17 @@ ApplicatonContext 가 제공하는 부가기능
   - 파일, 클래스패스, 외부 등에서 리소스를 편리하게 조회 
 
 **정리**
-- ApplicationContext는 BeanFactory의 기능을 상속받는다.
-- ApplicationContext는 빈 관리기능 + 편리한 부가 기능을 제공한다.
-- BeanFactory를 직접 사용할 일은 거의 없다. 부가기능이 포함된 ApplicationContext를 사용한다. 
-- BeanFactory나 ApplicationContext를 스프링 컨테이너라 한다.
+- ApplicationContext 는 BeanFactory 의 기능을 상속받는다.
+- ApplicationContext 는 빈 관리기능 + 편리한 부가 기능을 제공한다.
+- BeanFactory 를 직접 사용할 일은 거의 없다. 부가기능이 포함된 ApplicationContext 를 사용한다. 
+- BeanFactory 나 ApplicationContext 를 스프링 컨테이너라 한다.
 
 ### 스프링 빈 설정 메타 정보 - BeanDefinition
 - 스프링은 어떻게 이런 다양한 설정 형식을 지원하는 것일까? 그 중심에는 BeanDefinition 이라는 추상화가 있다.
 - 쉽게 이야기해서 **역할과 구현을 개념적으로 나눈 것**이다!
-  - XML을 읽어서 BeanDefinition을 만들면 된다.
-  - 자바 코드를 읽어서 BeanDefinition을 만들면 된다.
-  - 스프링 컨테이너는 자바 코드인지, XML인지 몰라도 된다. 오직 BeanDefinition만 알면 된다.
+  - XML을 읽어서 BeanDefinition 을 만들면 된다.
+  - 자바 코드를 읽어서 BeanDefinition 을 만들면 된다.
+  - 스프링 컨테이너는 자바 코드인지, XML 인지 몰라도 된다. 오직 BeanDefinition 만 알면 된다.
 - `BeanDefinition` 을 빈 설정 메타정보라 한다.
   - `@Bean` , `<bean>` 당 각각 하나씩 메타 정보가 생성된다.
 - 스프링 컨테이너는 이 메타정보를 기반으로 스프링 빈을 생성한다.  
@@ -117,7 +120,9 @@ public class BeanDefinitionTest {
 ```
 
 **정리**
-- BeanDefinition을 직접 생성해서 스프링 컨테이너에 등록할 수 도 있다. 하지만 실무에서 BeanDefinition을 직접 정의하거나 사용할 일은 거의 없다. 어려우면 그냥 넘어가면 된다^^!
-- BeanDefinition에 대해서는 너무 깊이있게 이해하기 보다는, 스프링이 다양한 형태의 설정 정보를 BeanDefinition으로 추상화해서 사용하는 것 정도만 이해하면 된다.
+- BeanDefinition 을 직접 생성해서 스프링 컨테이너에 등록할 수 도 있다. 하지만 실무에서 BeanDefinition 을 직접 정의하거나 사용할 일은 거의 없다. 
+어려우면 그냥 넘어가면 된다^^!
+- BeanDefinition 에 대해서는 너무 깊이있게 이해하기 보다는, 
+스프링이 다양한 형태의 설정 정보를 BeanDefinition 으로 추상화해서 사용하는 것 정도만 이해하면 된다.
 - 가끔 스프링 코드나 스프링 관련 오픈 소스의 코드를 볼 때, BeanDefinition 이라는 것이 보일 때가 있다. 이때 이러한 메커니즘을 떠올리면 된다.
 
