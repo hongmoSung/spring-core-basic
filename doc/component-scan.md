@@ -30,13 +30,13 @@ public class AutoAppConfig {
 **MemoryMemberRepository @Component 추가**
 ```java
 @Component
-  public class MemoryMemberRepository implements MemberRepository {}
+public class MemoryMemberRepository implements MemberRepository {}
 ```  
 
 **RateDiscountPolicy @Component 추가**
 ```java
 @Component
-  public class RateDiscountPolicy implements DiscountPolicy {}
+public class RateDiscountPolicy implements DiscountPolicy {}
 ```  
 
 **MemberServiceImpl @Component, @Autowired 추가**
@@ -240,7 +240,7 @@ public class ComponentFilterAppConfigTest {
 - excludeFilters 에 MyExcludeComponent 애노테이션을 추가해서 BeanB는 스프링 빈에 등록되지 않는다.
 
 ### FilterType 옵션
-FilterType은 5가지 옵션이 있다.  
+FilterType 은 5가지 옵션이 있다.  
 
 - ANNOTATION: 기본값, 애노테이션을 인식해서 동작한다. 
   - ex) org.example.SomeAnnotation
